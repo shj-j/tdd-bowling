@@ -38,7 +38,7 @@ public class BowlingGame {
                 if(nextFrame.getFirstThrow() != maximumScoreForThrow){
                     score += currentFrame.getScore() + nextFrame.getScore();
                 }else if(nextFrame.getFirstThrow() == maximumScoreForThrow){
-                    score += currentFrame.getScore() + nextFrame.getScore()+frames.get(index+1).getScore();
+                    score += currentFrame.getScore() + nextFrame.getScore() + frames.get(index+2).getFirstThrow();
                 }
             }else if(currentFrame.getScore() == maximumScoreForThrow){
                 score += currentFrame.getScore() + nextFrame.getFirstThrow();
