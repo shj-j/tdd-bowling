@@ -40,6 +40,10 @@ public class BowlingGame {
                 }else if(nextFrame.getFirstThrow() == maximumScoreForThrow){
                     score += currentFrame.getScore() + nextFrame.getScore()+frames.get(index+1).getScore();
                 }
+            }else if(currentFrame.getScore() == maximumScoreForThrow){
+                score += currentFrame.getScore() + nextFrame.getFirstThrow();
+            }else{
+                score += currentFrame.getScore();
             }
         }
         Frame current = frames.get(index);
