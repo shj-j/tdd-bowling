@@ -6,49 +6,50 @@ import java.util.stream.Collectors;
 public class BowlingGame {
 
     private static final int totalFrame = 10;
-    // List<Integer> throwScores = new ArrayList();
+    private static final int maximumScoreForThrow = 10;
+    
+
+
+    public List<Frame> storeFrame(List<Integer> throwScores){
+        List<Frame> frames = new ArrayList<>();
+
+        for(int i = 0; i < totalFrame*2 ; i += 2){
+            int currentThrow = throwScores.get(i);
+            int nextThrow = throwScores.get(i+1);
+
+            frames.add(new Frame(currentThrow,nextThrow));
+        }
+        frames.add(new Frame(throwScores.get(totalFrame),0));
+        return frames;
+    }
 
     public int getScore(Integer[] numberList){
 
         List<Integer> throwScores = Stream.of(numberList).collect(Collectors.toList());
+        List<Frame> frames = storeFrame(throwScores);
 
-        int frameAmount = 1;
         int score = 0;
-        int isOneFrame = 1;
         int index;
+        for( index = 0; index< totalFrame-1;index++){
+            Frame currentFrame = frames.get(index);
+            Frame nextFrame = frames.get(index+1);
 
-        for( index=0 ; index < throwScores.size(); index++){
-            int currentThrow = throwScores.get(index);
-            int preThrow = 0;
-
-            if(frameAmount == totalFrame) break;
-
-            if(currentThrow == 10) {
-                frameAmount++;
-                score += currentThrow + throwScores.get(index+1) + throwScores.get(index+2);
-            }
-            if(isOneFrame == 2){
-                frameAmount++;
-                if(currentThrow + preThrow == 10){
-                    score += 10 + throwScores.get(index+1);
-                }else{
-                    score += currentThrow + preThrow;
+            if(currentFrame.getFirstThrow() == maximumScoreForThrow){
+                if(nextFrame.getFirstThrow() != maximumScoreForThrow){
+                    score += currentFrame.getScore() + nextFrame.getScore();
+                }else if(nextFrame.getFirstThrow() == maximumScoreForThrow){
+                    score += currentFrame.getScore() + nextFrame.getScore()+frames.get(index+1).getScore();
                 }
-                isOneFrame = 1;
-            }else{
-                isOneFrame += 1;
-                preThrow = currentThrow;
             }
         }
+        Frame current = frames.get(index);
+        Frame next = frames.get(index+1);
 
-        if(throwScores.get(index) == 10 ){
-            score += 10 + throwScores.get(index+1)+throwScores.get(index+2);
-        }else if(throwScores.get(index)+throwScores.get(index+1) == 10){
-            score += 10 + throwScores.get(index+2);
+        if (current.getFirstThrow() == maximumScoreForThrow || current.getScore() == maximumScoreForThrow){
+            score += current.getScore() + next.getFirstThrow();
         }else{
-            score += throwScores.get(index) + throwScores.get(index+1);
+            score += current.getScore();
         }
-
         return score;
     }
 
